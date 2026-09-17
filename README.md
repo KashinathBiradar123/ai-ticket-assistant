@@ -1,5 +1,7 @@
 # AI Ticket Assistant
 
+![Architecture Diagram](docs/architecture.png)
+
 AI-powered customer support ticket analytics system. Ask questions in natural language, detect anomalies, and explore 500 support tickets via REST API and a web UI.
 
 ## Features
@@ -11,9 +13,16 @@ AI-powered customer support ticket analytics system. Ask questions in natural la
 - **Web UI** — Streamlit with 3 tabs
 - **SQL Safety** — Whitelist validation (SELECT only, tickets table only)
 - **LLM Fallback** — Groq (primary) + Ollama (local fallback)
+- **One-command start** — `python run.py`
 
 ## Architecture
-<img width="500" height="305" alt="923cf2d7-cc57-41bb-a18a-5647b9f74fe4" src="https://github.com/user-attachments/assets/f250d0ea-ba9b-49f6-9809-0cd7734a2bbb" />
+
+The system is organized into three layers:
+
+1. **Data Layer** — CSV → Pandas ingestion → SQLite queryable database
+2. **Query Layer** — NL question → LLM → SQL validation → execution → LLM answer synthesis
+3. **Anomaly Engine** — Rule-based and statistical detection (5 detectors)
+4. **API/UI Layer** — FastAPI REST API + Streamlit UI
 
 ## Tech Stack
 
@@ -48,9 +57,3 @@ cp .env.example .env
 # Edit .env and add your GROQ_API_KEY
 
 python -m app.ingest
-## Running
-
-### One command (recommended)
-
-```bash
-python run.py
