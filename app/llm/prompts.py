@@ -15,6 +15,8 @@ Columns:
 - agent_id: TEXT, assigned support agent identifier
 - customer_rating: REAL, rating from 1 to 5, NULL if unresolved
 - issue_summary: TEXT, brief description of the reported issue
+
+Dataset date range: 2024-01-01 to 2024-03-31 (latest date: 2024-03-31).
 """
 
 
@@ -47,7 +49,30 @@ STRICT RULES:
 9. customer_rating can be NULL for unresolved tickets.
 10. Use appropriate aggregation functions (COUNT, AVG, MIN, MAX, SUM) for aggregation questions.
 11. Use ORDER BY and LIMIT for ranking questions.
-12. Use created_at for date-related questions.
+
+*** DATE CONTEXT — CRITICAL RULE ***
+12. The dataset only spans January 2024 to March 2024. The latest date is 2024-03-31.
+
+    When the user says "this month", "this week", "today", "recent", "latest", etc.,
+    interpret these RELATIVE TO THE DATASET, not the current system date.
+
+    Use these mappings:
+    - "this month" / "current month" → March 2024
+    - "this week" / "last week" / "recent" → the last 7 days of March 2024
+    - "today" → 2024-03-31
+    - "this year" → 2024
+
+    Example SQL for "this month":
+    WHERE strftime('%Y-%m', created_at) = '2024-03'
+
+    Example SQL for "this week" (last 7 days of data):
+    WHERE created_at >= '2024-03-25'
+
+    DO NOT use date('now'), CURRENT_DATE, or CURRENT_TIMESTAMP.
+    These will return 0 results because the data is from 2024.
+
+*** END DATE CONTEXT RULE ***
+
 13. If the question cannot be answered with the available schema, return an empty SQL string.
 14. Return ONLY valid JSON. Do not wrap in markdown code fences.
 15. The JSON must have exactly these fields:
@@ -67,6 +92,10 @@ Question: Which agent resolved the most tickets?
 Output:
 {{"sql":"SELECT agent_id, COUNT(*) AS resolved_count FROM tickets WHERE status = 'Resolved' GROUP BY agent_id ORDER BY resolved_count DESC LIMIT 1","intent":"ranking","explanation":"Counts resolved tickets for each agent and returns the agent with the highest count."}}
 
+Question: Which agent resolved the most tickets this month?
+Output:
+{{"sql":"SELECT agent_id, COUNT(*) AS resolved_count FROM tickets WHERE status = 'Resolved' AND strftime('%Y-%m', created_at) = '2024-03' GROUP BY agent_id ORDER BY resolved_count DESC LIMIT 1","intent":"ranking","explanation":"Counts resolved tickets in March 2024 (latest month in data) per agent."}}
+
 Question: What is the average customer rating for Technical category tickets?
 Output:
 {{"sql":"SELECT AVG(customer_rating) AS average_rating FROM tickets WHERE category = 'Technical' AND customer_rating IS NOT NULL","intent":"aggregate","explanation":"Calculates the average non-null customer rating for Technical tickets."}}
@@ -74,13 +103,19 @@ Output:
 Question: Show me all Critical tickets that are not resolved.
 Output:
 {{"sql":"SELECT ticket_id, status, priority FROM tickets WHERE priority = 'Critical' AND status != 'Resolved' LIMIT 100","intent":"filter","explanation":"Returns Critical tickets that are not in Resolved status."}}
+
+Question: Are there any anomalies in resolution times this week?
+Output:
+{{"sql":"SELECT ticket_id, resolution_time_hrs FROM tickets WHERE resolution_time_hrs IS NOT NULL AND created_at >= '2024-03-25' ORDER BY resolution_time_hrs DESC LIMIT 100","intent":"filter","explanation":"Returns tickets created in the last week of March 2024 with their resolution times."}}
 """
 
 
 USER_PROMPT_TEMPLATE = """
 Convert the following natural language question into a SQL query.
 
-Remember: all string values must be in single quotes.
+Remember:
+- All string values must be in single quotes.
+- Date-relative terms like "this month" / "this week" refer to the dataset's date range (Jan-Mar 2024), NOT today's date.
 
 User question:
 {question}
