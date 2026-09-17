@@ -36,7 +36,7 @@ AI-powered customer support ticket analytics system. Ask questions in natural la
 ### Installation
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/KashinathBiradar123/ai-ticket-assistant.git
 cd ai-ticket-assistant
 
 python -m venv .venv
