@@ -13,23 +13,8 @@ AI-powered customer support ticket analytics system. Ask questions in natural la
 - **LLM Fallback** — Groq (primary) + Ollama (local fallback)
 
 ## Architecture
-CSV → Ingestion (Pandas + SQLite) → Queryable Database
-↓
-┌───────────────┴───────────────┐
-↓ ↓
-Natural Language Query Anomaly Engine
-↓ ↓
-LLM (Groq/Ollama) Rule/Stats Detection
-↓ ↓
-SQL Validation Flags
-↓ ↓
-SQLite Execution ↓
-↓ ↓
-LLM Answer Synthesis FastAPI
-↓ ↓
-└─────────→ FastAPI ←───────────┘
-↓
-Streamlit UI
+<img width="299" height="205" alt="image" src="https://github.com/user-attachments/assets/c75601e5-3881-4534-aa42-f47cd47e1505" />
+
 
 ## Tech Stack
 
