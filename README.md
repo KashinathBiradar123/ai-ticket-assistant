@@ -13,7 +13,72 @@ AI-powered customer support ticket analytics system. Ask questions in natural la
 - **LLM Fallback** — Groq (primary) + Ollama (local fallback)
 
 ## Architecture
-<img width="400" height="255" alt="image" src="https://github.com/user-attachments/assets/b096b4ee-bfaf-4bdd-ac83-681a2c3dc0b8" />
+┌─────────────────────────────────────────────────────────────┐
+│                         DATA LAYER                          │
+└─────────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+                    ┌───────────────┐
+                    │ CSV Dataset   │
+                    │ Support       │
+                    │ Tickets       │
+                    └───────┬───────┘
+                            │
+                            ▼
+                    ┌───────────────┐
+                    │ Data Ingestion │
+                    │ Pandas         │
+                    └───────┬───────┘
+                            │
+                            ▼
+                    ┌───────────────┐
+                    │ SQLite        │
+                    │ Queryable DB  │
+                    └───────┬───────┘
+                            │
+             ┌──────────────┴──────────────┐
+             │                             │
+             ▼                             ▼
+    ┌──────────────────┐          ┌──────────────────┐
+    │ Natural Language │          │ Anomaly Engine   │
+    │ Query Pipeline   │          │                  │
+    └────────┬─────────┘          └────────┬─────────┘
+             │                             │
+             ▼                             ▼
+    ┌──────────────────┐          ┌──────────────────┐
+    │ LLM              │          │ Rule / Statistics│
+    │ Groq / Ollama    │          │ Detection        │
+    └────────┬─────────┘          └────────┬─────────┘
+             │                             │
+             ▼                             │
+    ┌──────────────────┐                   │
+    │ SQL Validation   │                   │
+    │ & Safety Checks  │                   │
+    └────────┬─────────┘                   │
+             │                             │
+             └──────────────┬──────────────┘
+                            ▼
+                    ┌───────────────┐
+                    │ SQLite        │
+                    │ Execution     │
+                    └───────┬───────┘
+                            │
+                            ▼
+                    ┌───────────────┐
+                    │ LLM Answer    │
+                    │ Synthesis     │
+                    └───────┬───────┘
+                            │
+                            ▼
+                    ┌───────────────┐
+                    │ FastAPI       │
+                    │ REST API      │
+                    └───────┬───────┘
+                            │
+                            ▼
+                    ┌───────────────┐
+                    │ Streamlit UI  │
+                    └───────────────┘
 
 ## Tech Stack
 
