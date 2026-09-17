@@ -13,31 +13,12 @@ AI-powered customer support ticket analytics system. Ask questions in natural la
 - **LLM Fallback** — Groq (primary) + Ollama (local fallback)
 
 ## Architecture
-flowchart TD
+![Architecture Diagram](docs/architecture.png)
 
-    subgraph DATA["DATA LAYER"]
-        A[CSV Dataset<br/>Support Tickets]
-        B[Data Ingestion<br/>Pandas]
-        C[SQLite<br/>Queryable Database]
-
-        A --> B
-        B --> C
-    end
-
-    C --> D[Natural Language<br/>Query Pipeline]
-    C --> E[Anomaly Engine]
-
-    D --> F[LLM<br/>Groq / Ollama]
-    F --> G[SQL Validation<br/>& Safety Checks]
-    G --> H[SQLite<br/>Execution]
-
-    E --> I[Rule / Statistics<br/>Detection]
-    I --> H
-
-    H --> J[LLM Answer<br/>Synthesis]
-    J --> K[FastAPI<br/>REST API]
-    K --> L[Streamlit UI]
-
+The system has three layers:
+- **Data Layer** — CSV → Pandas ingestion → SQLite
+- **Query Layer** — NL question → LLM → SQL validation → execution → LLM answer
+- **API/UI Layer** — FastAPI REST endpoints + Streamlit UI
 ## Tech Stack
 
 | Layer | Tool |
