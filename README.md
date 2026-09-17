@@ -1,6 +1,6 @@
 # AI Ticket Assistant
 
-![Architecture Diagram](docs/architecture.png)
+
 
 AI-powered customer support ticket analytics system. Ask questions in natural language, detect anomalies, and explore 500 support tickets via REST API and a web UI.
 
