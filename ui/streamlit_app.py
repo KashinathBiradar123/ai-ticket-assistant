@@ -20,10 +20,11 @@ with tab1:
 
     example_questions = [
         "How many tickets are currently open?",
+        "Which agent resolved the most tickets this month?",
         "Which agent has the lowest average customer rating?",
         "Show me all Critical tickets not resolved within 12 hours",
         "What is the average customer rating for Technical category tickets?",
-        "Which agent resolved the most tickets?",
+        "Are there any anomalies in resolution times this week?",
     ]
 
     selected_example = st.selectbox(
