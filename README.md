@@ -13,7 +13,7 @@ AI-powered customer support ticket analytics system. Ask questions in natural la
 - **LLM Fallback** — Groq (primary) + Ollama (local fallback)
 
 ## Architecture
-<img width="299" height="205" alt="image" src="https://github.com/user-attachments/assets/b096b4ee-bfaf-4bdd-ac83-681a2c3dc0b8" />
+<img width="400" height="255" alt="image" src="https://github.com/user-attachments/assets/b096b4ee-bfaf-4bdd-ac83-681a2c3dc0b8" />
 
 ## Tech Stack
 
