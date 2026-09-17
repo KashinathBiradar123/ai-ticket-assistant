@@ -13,72 +13,30 @@ AI-powered customer support ticket analytics system. Ask questions in natural la
 - **LLM Fallback** — Groq (primary) + Ollama (local fallback)
 
 ## Architecture
-┌─────────────────────────────────────────────────────────────┐
-│                         DATA LAYER                          │
-└─────────────────────────────────────────────────────────────┘
-                            │
-                            ▼
-                    ┌───────────────┐
-                    │ CSV Dataset   │
-                    │ Support       │
-                    │ Tickets       │
-                    └───────┬───────┘
-                            │
-                            ▼
-                    ┌───────────────┐
-                    │ Data Ingestion │
-                    │ Pandas         │
-                    └───────┬───────┘
-                            │
-                            ▼
-                    ┌───────────────┐
-                    │ SQLite        │
-                    │ Queryable DB  │
-                    └───────┬───────┘
-                            │
-             ┌──────────────┴──────────────┐
-             │                             │
-             ▼                             ▼
-    ┌──────────────────┐          ┌──────────────────┐
-    │ Natural Language │          │ Anomaly Engine   │
-    │ Query Pipeline   │          │                  │
-    └────────┬─────────┘          └────────┬─────────┘
-             │                             │
-             ▼                             ▼
-    ┌──────────────────┐          ┌──────────────────┐
-    │ LLM              │          │ Rule / Statistics│
-    │ Groq / Ollama    │          │ Detection        │
-    └────────┬─────────┘          └────────┬─────────┘
-             │                             │
-             ▼                             │
-    ┌──────────────────┐                   │
-    │ SQL Validation   │                   │
-    │ & Safety Checks  │                   │
-    └────────┬─────────┘                   │
-             │                             │
-             └──────────────┬──────────────┘
-                            ▼
-                    ┌───────────────┐
-                    │ SQLite        │
-                    │ Execution     │
-                    └───────┬───────┘
-                            │
-                            ▼
-                    ┌───────────────┐
-                    │ LLM Answer    │
-                    │ Synthesis     │
-                    └───────┬───────┘
-                            │
-                            ▼
-                    ┌───────────────┐
-                    │ FastAPI       │
-                    │ REST API      │
-                    └───────┬───────┘
-                            │
-                            ▼
-                    ┌───────────────┐
-                    │ Streamlit UI  │
-                    └───────────────┘
+flowchart TD
+
+    subgraph DATA["DATA LAYER"]
+        A[CSV Dataset<br/>Support Tickets]
+        B[Data Ingestion<br/>Pandas]
+        C[SQLite<br/>Queryable Database]
+
+        A --> B
+        B --> C
+    end
+
+    C --> D[Natural Language<br/>Query Pipeline]
+    C --> E[Anomaly Engine]
+
+    D --> F[LLM<br/>Groq / Ollama]
+    F --> G[SQL Validation<br/>& Safety Checks]
+    G --> H[SQLite<br/>Execution]
+
+    E --> I[Rule / Statistics<br/>Detection]
+    I --> H
+
+    H --> J[LLM Answer<br/>Synthesis]
+    J --> K[FastAPI<br/>REST API]
+    K --> L[Streamlit UI]
 
 ## Tech Stack
 
